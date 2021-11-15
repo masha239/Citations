@@ -7,10 +7,13 @@ import pickle
 parser = argparse.ArgumentParser()
 parser.add_argument('--indir', type=str, help='directory for .djvu documnets recursive search')
 parser.add_argument('--outdir', type=str, default='', help='directory for results')
+parser.add_argument('--partlen', type=int, default=1000000, help='Number of symbols in one part of text (for inverted '
+                                                                 'index)')
 args = parser.parse_args()
 
 indir = args.indir
 outdir = args.outdir
+N = args.partlen
 convert(indir, outdir)
 
 path = os.path.join(outdir, 'djvu2txt')
@@ -22,7 +25,6 @@ for rootdir, dirs, files in os.walk(path):
             to_process_txt.append(os.path.join(rootdir, file))
 
 index = InvertedIndex()
-N = 1000000
 for filename in to_process_txt:
     with open(filename, 'r') as f:
         text = f.read()
